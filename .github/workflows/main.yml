@@ -1,14 +1,11 @@
 on:
-  push:  # 指定触发事件
+  push:
     branches:
-      - master  # 指定触发 action 的分支
+      - jishiyidao
 
 jobs:
   main:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./jishiyidao
     steps:
 
     # 拉取github仓库代码
@@ -32,5 +29,5 @@ jobs:
       with:
         access_token: ${{ secrets.ACCESS_TOKEN }} # 指定密钥
         branch: gh-pages  ##指定推送到的远程分支
-        folder: jishiyidao/dist # 指定构建之后要推送哪个目录的代码
+        folder: dist # 指定构建之后要推送哪个目录的代码
         target_folder: jishiyidao
