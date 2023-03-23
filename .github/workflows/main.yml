@@ -23,11 +23,11 @@ jobs:
     - name: 构建
       run: |
           npm run build
-    # 执行部署
+    # 执行部署，将当前dist目录中的内容推送到gh-pages分支下的jishiyidao目录
     - name: 部署
-      uses: JamesIves/github-pages-deploy-action@releases/v3 # 这个action会根据配置自动推送代码到指定分支
+      uses: JamesIves/github-pages-deploy-action@releases/v4 # 这个action会根据配置自动推送代码到指定分支
       with:
-        access_token: ${{ secrets.ACCESS_TOKEN }} # 指定密钥
+        ssh-key: ${{ secrets.DEPLOY_KEY }}
         branch: gh-pages  ##指定推送到的远程分支
         folder: dist # 指定构建之后要推送哪个目录的代码
-        target_folder: jishiyidao
+        target-folder: jishiyidao

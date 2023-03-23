@@ -1,6 +1,4 @@
-<style src="@vueform/slider/themes/default.css">
-
-</style>
+<style src="@vueform/slider/themes/default.css"></style>
 <style>
 ul li {
     font-family: Fira Code;
@@ -37,7 +35,7 @@ ul li {
     </div>
     <br />
     <div>
-        <Slider v-model="scoreRange" :min=0 :max=6 />
+        <Slider v-model="scoreRange" :min=0 :max=9 />
     </div>
     <br />
     <div>
@@ -73,7 +71,7 @@ export default defineComponent({
                 ji: ''
             },
             yiJiTimes: [{ date: '', weekday: '', time: '', score: 0 }],
-            scoreRange: [0, 6]
+            scoreRange: [4, 9]
         }
     },
     created() {
@@ -136,10 +134,24 @@ export default defineComponent({
 
             this.yiJiTimes.clear()
             for (let i = 0; i < 21 * 12; i++) {
-                let currentLunar = Lunar.fromDate(currentSolar)
-                let yi = currentLunar.getDayYi().concat(currentLunar.getTimeYi()).filterConcernedYiJi()
-                let ji = currentLunar.getDayJi().concat(currentLunar.getTimeJi()).filterConcernedYiJi()
-                let score = yi.length - ji.length
+                const currentLunar = Lunar.fromDate(currentSolar)
+                const dayYi = currentLunar.getDayYi().filterConcernedYiJi()
+                const dayJi = currentLunar.getDayJi().filterConcernedYiJi()
+                const timeYi = currentLunar.getTimeYi().filterConcernedYiJi()
+                const timeJi = currentLunar.getTimeJi().filterConcernedYiJi()
+                let score = 0;
+                for (const yiji of concernedYiJi) {
+                    const inDayYi = dayYi.includes(yiji)
+                    const inDayJi = dayJi.includes(yiji)
+                    const inTimeYi = timeYi.includes(yiji)
+                    const inTimeJi = timeJi.includes(yiji)
+                    score += inDayYi ? 1 : 0
+                    score += inTimeYi ? 1 : 0
+                    score += inDayYi && inTimeYi ? 1 : 0
+                    score -= inDayJi ? 1 : 0
+                    score -= inTimeJi ? 1 : 0
+                    score -= inDayJi && inTimeJi ? 1 : 0
+                }
                 if (score >= this.scoreRange[0] && score <= this.scoreRange[1]) {
                     let date = currentSolar.toLocaleString('zh-CN', {
                         year: 'numeric',
